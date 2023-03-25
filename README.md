@@ -9,16 +9,27 @@ http://127.0.0.1:8050/
 #### Exercice 1
 
 cd /
+
 ls
+
 pwd
+
 mkdir test
+
 cd /home
+
 cd ~
+
 cd /home
+
 cd /
+
 cd ~
+
 mkdir test
+
 cd test
+
 pwd
 
 #### Exercice 2: Créer, renommer, copier, supprimer
