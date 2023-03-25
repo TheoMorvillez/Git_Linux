@@ -8,6 +8,7 @@ http://127.0.0.1:8050/
 
 #### Exercice 1
 
+```
 cd /
 
 ls
@@ -31,10 +32,10 @@ mkdir test
 cd test
 
 pwd
-
+```
 #### Exercice 2: Créer, renommer, copier, supprimer
 
-
+```
 cd ~
 
 pwd
@@ -54,12 +55,12 @@ mv notes/[first_name][last_name].txt notes/[first_name][last_name]_$(date +%Y).t
 cp -r notes notes_2022
 
 rm -rv notes
-
+```
 
 
 #### Exercice 3: Créer et exécuter un script
 
-
+```
 
 cd ~/linux_ex_1
 
@@ -69,11 +70,11 @@ cat script_1.sh
 
 sh script_1.sh
 
-
+```
 
 #### Exercice 4.1 : Modifier les droits pour accéder ou modifier un fichier
 
-
+```
 
 cd ~/linux_ex_1
 
@@ -112,10 +113,10 @@ chmod a=rwx credentials
 a. ls -l credentials
 
 
-
+```
 #### Exercice 4.2: Accéder aux fichiers root
 
-
+```
 
 cd /
 
@@ -140,10 +141,10 @@ sudo chmod a=rwx ~/.private_file
 a. echo "Even newer information" > ~/.private_file
 
 b. cat ~/.private_file
-
+```
 #### Exercice 4.3: Changer le propriétaire d'un fichier
 
-
+```
 
 
 chmod a+rw ~/.private_file
@@ -151,12 +152,12 @@ chmod a+rw ~/.private_file
 sudo chown $USER ~/.private_file
 
 chmod a+rw ~/.private_file
-
+```
 
 
 #### Exercice 4.4: Gérer les paquets (outils/fonctions)
 
-
+```
 
 sudo apt update
 
@@ -194,7 +195,7 @@ tmux attach-session -t 1
 
 Ctrl+b d
 
-
+```
 
 ### TD2 
 
@@ -202,7 +203,7 @@ Ctrl+b d
 
 #### Exercise 1: Access general computer informations
 
-
+```
 
 sudo apt-get update && sudo apt-get upgrade -y
 
@@ -223,10 +224,10 @@ lsusb
 hostname
 
 
-
+```
 #### Exercise 2: Shell - Variables and scripts scope
 
-
+```
 
 x="piri pimpin"
 
@@ -260,12 +261,12 @@ echo 'export PATH=$PATH:/path/to/current/location' >> .profile
 
 Open a new terminal and run pilou.
 
-
+```
 
 #### Exercise 3: Scheduling task - daemon
 
 
-
+```
 echo "echo date +%F-%T Hello >> hellos.txt" > say_hello.sh
 
 chmod +x say_hello.sh
@@ -273,13 +274,13 @@ chmod +x say_hello.sh
 crontab -e
 
 /path/to/say_hello.sh
-
+```
 
 
 #### Exercise 4: Hashing
 
 
-
+```
 mkdir hash_checksum
 
 cd hash_checksum
@@ -303,13 +304,13 @@ sha256sum gentle_script.sh > log_sha
 ls -la
 
 cat log_sha
-
+```
 
 
 #### Exercise 5: Compressing
 
 
-
+```
 sudo apt-get install qpdf -y
 
 mkdir compress
@@ -335,13 +336,13 @@ wc -c hello.deflate hello_multiple.deflate hello_multiple_i.deflate
 awk '{printf "%d\n", 100*$1/664}' log_compress
 
 The compression ratio decreases as the file size and the randomness of the content increase.
-
+```
 
 
 #### Exercise 6: ACLs : Access Control Lists
 
 
-
+```
 sudo useradd client_1 -p passwd-client_1
 
 sudo useradd contributor_1 -p passwd-contributor_1
@@ -375,12 +376,12 @@ su - client_1
 rm -r lika_project
 
 su - contributor_1
-
+```
 
 ### TD3
 
 #### Exercise 1: Grep and awk on tabular data
-
+```
 ls -l /
 
 ls -l / | grep bin
@@ -390,9 +391,9 @@ ls -l / | grep bin | awk '{print $5}'
 ls -l / | grep bin | awk '{print $6, $7, $8}'
 
 ls -l / | grep bin | awk '{print $8 "-" $6 "-" $7}'
-
+```
 #### Exercise 2: Grep with Regex, and sed on unstructured data
-
+```
 curl https://en.wikipedia.org/wiki/List_of_cyberattacks > cyberattacks.txt
 
 grep "meta" cyberattacks.txt
@@ -406,3 +407,109 @@ cat cyberattacks.txt | grep -A1 'mw-content-text' | grep -v 'mw-content-text'
 grep -oP '(?<=<title>).*(?= - Wikipedia</title>)' cyberattacks.txt
 
 cat cyberattacks.txt | grep "^=="
+
+```
+### TD4 
+
+#### Exercice 1 
+```
+4 : #!/bin/bash
+    REMOTE_SERVER="remote.server.com"
+    PRIVATE_KEY_PATH="~/.ssh/my_private_key.pem"
+    REMOTE_USERNAME="my_username"
+    ssh -i $PRIVATE_KEY_PATH $REMOTE_USERNAME@$REMOTE_SERVER
+5 : ./connect.sh
+6 : mv key.pem .key.pem
+    nano connect.sh
+    ssh -i ~/.key.pem ec2-user@<your-instance-ip>
+    ./connect.sh
+  ```
+#### Exercice 2
+  ```
+  1 : touch test_to_remote_instance.txt
+2 : ssh username@remote_instance_ip_address
+    touch test_from_remote_instance.txt
+    exit
+3 : scp test_to_remote_instance.txt username@remote_instance_ip_address:~
+    scp username@remote_instance_ip_address:~/test_from_remote_instance.txt .
+4 : if [ -z "$1" ]; then
+        echo "Please provide the path of the file to send as an argument."
+        exit 1
+    fi
+
+    if [ ! -f "$1" ]; then
+      echo "The file $1 does not exist."
+      exit 1
+    fi
+    scp "$1" username@remote_instance_ip_address:~
+
+    if [ -z "$1" ]; then
+        echo "Please provide the path of the file to receive as an argument."
+        exit 1
+    fi
+    scp username@remote_instance_ip_address:"$1" .
+5 : ./scp_to_remote_instance.sh /path/to/my_file.txt
+    ./scp_from_remote_instance.sh ~/remote_file.txt
+```
+
+### TD7
+  
+#### Exercice 2
+ ``` 
+git checkout -b theo-morvillez
+echo "Allez l'om" > theo-morvillez.txt
+git add theo-morvillez.txt
+git commit -m "Add theo-morvillez.txt"
+git push origin theo-morvillez
+  
+```  
+#### Exercice 3
+```  
+git checkout main #master ne marchait pas
+git merge theo-morvillez
+git push origin main
+  
+```
+#### Exercice 4
+```  
+git checkout theo-morvillez
+nano README.md
+git add README.md
+git commit -m "Edit lines 2-6 in README.md"
+git checkout main
+git pull origin main
+git merge theo-morvillez
+nano README.md
+git add README.md
+git commit -m "Resolve merge conflicts in README.md"
+git push origin main
+```  
+
+#### Exercice 5
+```  
+git checkout main
+git pull origin main
+cat README.md
+git checkout theo-morvillez
+git merge main
+git add README.md
+git commit -m "Merge changes from main to theo-morvillez"
+  
+```
+#### Exercice 6
+ ``` 
+git checkout main
+git branch -d theo-morvillez
+git push origin --delete theo-morvillez
+```  
+
+#### Exercice 7
+ ``` 
+git pull origin main
+git checkout -b theo-morvillez
+nano README.md
+git add README.md
+git commit -m "ce que l'on a fait"
+git rebase -i HEAD~8
+git push origin theo-morvillez
+```
