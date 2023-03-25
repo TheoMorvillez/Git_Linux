@@ -377,3 +377,32 @@ rm -r lika_project
 su - contributor_1
 
 
+### TD3
+
+#### Exercise 1: Grep and awk on tabular data
+
+ls -l /
+
+ls -l / | grep bin
+
+ls -l / | grep bin | awk '{print $5}'
+
+ls -l / | grep bin | awk '{print $6, $7, $8}'
+
+ls -l / | grep bin | awk '{print $8 "-" $6 "-" $7}'
+
+#### Exercise 2: Grep with Regex, and sed on unstructured data
+
+curl https://en.wikipedia.org/wiki/List_of_cyberattacks > cyberattacks.txt
+
+grep "meta" cyberattacks.txt
+
+grep -o "meta \w+" cyberattacks.txt
+
+grep -oP "(?<=meta )\w+" cyberattacks.txt
+
+cat cyberattacks.txt | grep -A1 'mw-content-text' | grep -v 'mw-content-text'
+
+grep -oP '(?<=<title>).*(?= - Wikipedia</title>)' cyberattacks.txt
+
+cat cyberattacks.txt | grep "^=="
